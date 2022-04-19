@@ -3,7 +3,7 @@
     console.log(Math.max(...arrayNumeros))
 
 
- // 3.Passe a lista de arquivos texto em um diretório específico, 
+    // 3.Passe a lista de arquivos texto em um diretório específico, 
     // e nestes arquivos deve possuir em seu conteúdo números de telefone 
     // em um formato específico que você deve determinar.
 
@@ -11,40 +11,36 @@
     // Crie uma página com um botão, que ao clicar neste botão, 
     // popule uma caixa de seleção através de uma requisição Ajax a um arquivo JSON.
 
+    const button = document.getElementById("search-btn")
 
-document.getElementById("btn").addEventListener("click", function(){
-    console.log("teste")
-    var ajax = new XMLHttpRequest();
-
-// Seta tipo de requisição e URL com os parâmetros
-ajax.open("GET", "https://pokeapi.co/api/v2/pokemon/charizard", true);
-
-// Envia a requisição
-ajax.send();
-
-// Cria um evento para receber o retorno.
-ajax.onreadystatechange = function() {
-  
-  // Caso o state seja 4 e o http.status for 200, é porque a requisiçõe deu certo.
-	if (ajax.readyState == 4 && ajax.status == 200) {
-    
-		var data = ajax.responseText;
-		
-        var select = document.getElementById("selectNumber");
-        console.log(data)
-    var options = JSON.stringify(data);
-    console.log(options)
-    for(var i = 0; i < options.length; i++) {
-        var opt = options[i];
-        var el = document.createElement("option");
-        el.textContent = opt;
-        el.value = opt;
-        select.appendChild(el);
-}
-    // Retorno do Ajax
-		console.log(data);
-	}
-
-    
-}
-});
+    function populateArray (elements) {
+        const select = document.getElementById("select-pokemon");
+        for (var i = 0; i < elements.length; i++) {
+          const  { name } = elements[i].ability
+          const option = document.createElement("option");
+          option.textContent = name;
+          option.value = name;
+          select.appendChild(option);
+        }
+      }
+      function getData    ()    {
+        var xmlhttp = new XMLHttpRequest();
+        var url = "https://pokeapi.co/api/v2/pokemon/ditto";
+        xmlhttp.open("GET", url, true);
+        xmlhttp.send();
+      
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+              try {
+                  const response = JSON.parse(xmlhttp.responseText);
+                  populateArray(response.abilities)
+              } catch (error) {
+                  throw Error;
+              }
+            }
+        }
+      }
+      
+      button.addEventListener('click', () => {
+        getData()
+      })
